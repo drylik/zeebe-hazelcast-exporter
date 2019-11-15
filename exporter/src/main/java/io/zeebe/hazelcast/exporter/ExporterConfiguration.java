@@ -14,8 +14,18 @@ public class ExporterConfiguration {
 
   public boolean updatePosition = true;
 
+  public boolean liteMember = false;
+
+  public String queuePrefix = "zeebe-exporter-queue";
+
+  public boolean oneQueue = true;
+
   public String getTopicName(ValueType valueType) {
     return topicPrefix + valueType.name();
+  }
+
+  public String getQueueName(ValueType valueType) {
+    return oneQueue ? queuePrefix : queuePrefix + "-" + valueType.name();
   }
 
   @Override
@@ -28,8 +38,10 @@ public class ExporterConfiguration {
         + enabledValueTypes
         + ", enabledRecordTypes="
         + enabledRecordTypes
-            + ", updatePosition="
-            + updatePosition
+        + ", updatePosition="
+        + updatePosition
+        + ", liteMember="
+        + liteMember
         + "]";
   }
 }

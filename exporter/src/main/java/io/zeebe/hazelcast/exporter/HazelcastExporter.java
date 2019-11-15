@@ -25,13 +25,13 @@ import org.slf4j.Logger;
 public class HazelcastExporter implements Exporter {
   private final EnumMap<ValueType, ITopic<byte[]>> topics = new EnumMap<>(ValueType.class);
 
-  private final List<ValueType> enabledValueTypes = new ArrayList<>();
+  protected final List<ValueType> enabledValueTypes = new ArrayList<>();
 
-  private ExporterConfiguration config;
-  private Logger logger;
-  private Controller controller;
+  protected ExporterConfiguration config;
+  protected Logger logger;
+  protected Controller controller;
 
-  private HazelcastInstance hazelcast;
+  protected HazelcastInstance hazelcast;
 
   @Override
   public void configure(Context context) {
@@ -77,6 +77,7 @@ public class HazelcastExporter implements Exporter {
     final Config cfg = new Config();
     cfg.getNetworkConfig().setPort(config.port);
     cfg.setProperty("hazelcast.logging.type", "slf4j");
+    cfg.setLiteMember(config.liteMember);
 
     hazelcast = Hazelcast.newHazelcastInstance(cfg);
 
@@ -109,7 +110,7 @@ public class HazelcastExporter implements Exporter {
     }
   }
 
-  private byte[] transformRecord(Record record) {
+  protected byte[] transformRecord(Record record) {
     final GeneratedMessageV3 dto = RecordTransformer.toProtobufMessage(record);
 
     try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
